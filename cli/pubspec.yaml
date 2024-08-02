@@ -14,8 +14,8 @@ environment:
 # Add regular dependencies here.
 dependencies:
   args: ^2.5.0
-  dotenv: ^4.2.0
   http: ^1.2.1
+  yaml: ^3.1.2
   # path: ^1.8.0
 
 dev_dependencies:

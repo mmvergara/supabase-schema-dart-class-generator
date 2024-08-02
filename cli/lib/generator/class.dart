@@ -1,3 +1,5 @@
+import 'package:yaml/yaml.dart';
+
 import 'converter_methods.dart';
 import 'dart_class.dart';
 import 'format_to_dart_type.dart';
@@ -8,7 +10,8 @@ import 'swagger.dart';
 import 'update_method.dart';
 import 'utils.dart';
 
-List<DartClass> generateDartClasses(DatabaseSwagger swagger) {
+List<DartClass> generateDartClasses(
+    DatabaseSwagger swagger, YamlMap? mappings) {
   List<DartClass> generatedClasses = [];
   // Object entries
   swagger.definitions.forEach((tableName, table) {
@@ -16,7 +19,8 @@ List<DartClass> generateDartClasses(DatabaseSwagger swagger) {
 
     final columns = table.columns;
     final requiredFields = table.requiredFields;
-    final className = tableNameToClassName(tableName);
+
+    final className = tableNameToClassName(tableName, mappings);
 
     // Class definition
     dartCode += 'class $className implements SupadartClass<$className> {\n';

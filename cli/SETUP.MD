@@ -1,10 +1,11 @@
 # Setup
 
-#### Fill Up the .env file with the following content
+#### Fill Up the pubspec.yaml file with the following content
 
-```js
-SUPABASE_URL=
-SUPABASE_ANON_KEY=
+```yaml
+supadart:
+  supabase_url:
+  supabase_anon_key:
 ```
 
 ### Install Dependencies

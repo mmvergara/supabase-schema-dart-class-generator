@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:args/args.dart';
-import 'package:dotenv/dotenv.dart';
+import 'package:yaml/yaml.dart';
 import 'package:supadart/generator/generator.dart';
 import 'package:supadart/generator/swagger.dart';
 
@@ -13,26 +13,10 @@ void main(List<String> arguments) async {
   final parser = ArgParser()
     ..addFlag('help',
         abbr: 'h', negatable: false, help: 'Show usage information')
-    ..addOption('env-path',
-        abbr: "e", help: 'Path to the .env file -- (default: .env)')
-    ..addOption('url',
-        abbr: "u",
-        help: 'Supabase URL          -- (default: .env SUPABASE_URL)')
-    ..addOption('key',
-        abbr: "k",
-        help: 'Supabase ANON KEY     -- (default: .env SUPABASE_ANON_KEY)')
-    ..addOption('output',
-        abbr: 'o',
+    ..addOption('config',
+        abbr: 'c',
         help:
-            'Output folder path, add ./ prefix      -- (default: "./lib/models/")')
-    ..addFlag('dart',
-        abbr: 'd',
-        negatable: false,
-        help: 'Enable if you are not using Flutter, just normal Dart project')
-    ..addFlag('seperated',
-        negatable: false,
-        abbr: 's',
-        help: 'Generate Seperate files for each classes')
+            'Path to config file of yaml            -- (default: "pubspec.yaml")')
     ..addFlag('version', abbr: 'v', negatable: false, help: version);
 
   final results = parser.parse(arguments);
@@ -48,36 +32,49 @@ void main(List<String> arguments) async {
     exit(0);
   }
 
-  bool isFlutter = results['dart'] ? false : true;
-  bool isSeperated = results['seperated'] ? true : false;
+  String url;
+  String anonKey;
+  YamlMap? mappings;
+  bool isFlutter;
+  bool isSeperated;
+  String output;
 
-  String? url;
-  String? anonKey;
-  var envPath = results['env-path'] ?? '.env';
-  var env = DotEnv(includePlatformEnvironment: true)..load([envPath]);
+  final configPath = results['config'] ?? 'pubspec.yaml';
+  print('Using config file: $configPath');
+  final configFile = File(configPath);
+  final configContent = await configFile.readAsString();
+  final config = loadYaml(configContent);
 
-  if (results['url'] != null && results['key'] != null) {
-    url = results['url'];
-    anonKey = results['key'];
+  if (config['supadart'] != null) {
+    url = config['supadart']['supabase_url'];
+    anonKey = config['supadart']['supabase_anon_key'];
+    isSeperated = config['supadart']['seperated'] ?? true;
+    isFlutter = config['supadart']['flutter'] ?? true;
+    output = config['supadart']['output'] ?? './lib/models/';
+    mappings = config['supadart']['mappings'];
+
+    print('Supabase URL: $url');
+    print('Supabase ANON KEY: $anonKey');
+    print('Seperated: $isSeperated');
+    print('Flutter: $isFlutter');
+    print('Output: $output');
+    print('Mappings: $mappings');
+    print('=' * 50);
   } else {
-    url = env['SUPABASE_URL'];
-    anonKey = env['SUPABASE_ANON_KEY'];
-  }
-
-  if (url == null || anonKey == null) {
     print(
-        "Please provide --url and --key or Set SUPABASE_URL and SUPABASE_ANON_KEY in .env file");
-    print('use -h or --help for help');
+        'Please add "supadart" config in pubspec.yaml or provide config file using --config');
     exit(1);
   }
 
   final databaseSwagger = await fetchDatabaseSwagger(url, anonKey);
   if (databaseSwagger == null) {
+    print('Failed to fetch database');
     exit(1);
   }
 
-  final files = generateModelFiles(databaseSwagger, isFlutter, isSeperated);
-  await generateAndFormatFiles(files, results['output'] ?? './lib/models/');
+  final files =
+      generateModelFiles(databaseSwagger, isFlutter, isSeperated, mappings);
+  await generateAndFormatFiles(files, output);
 
   print('\n$green 🎉 Done! $reset');
 }

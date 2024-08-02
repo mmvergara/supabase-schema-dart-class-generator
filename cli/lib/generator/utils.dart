@@ -1,3 +1,5 @@
+import 'package:yaml/yaml.dart';
+
 String snakeCasingToPascalCasing(String name) {
   return name
       .split("_")
@@ -12,7 +14,18 @@ String pascalCasingToSnakeCasing(String name) {
       .join("_");
 }
 
-String tableNameToClassName(String name) => snakeCasingToPascalCasing(name);
+String tableNameToClassName(String name, YamlMap? mappings) {
+  if (mappings != null && mappings[name] != null) {
+    return snakeCasingToPascalCasing(mappings[name]);
+  }
+  return snakeCasingToPascalCasing(name);
+}
 
 String classNameToFileName(String name) =>
     '${pascalCasingToSnakeCasing(name)}.dart';
+
+// extension EqualCaseInsensitiveExtension on String {
+//   bool equalCaseInsensitive(String other) {
+//     return toLowerCase() == other.toLowerCase();
+//   }
+// }

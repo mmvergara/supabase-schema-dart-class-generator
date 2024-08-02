@@ -7,3 +7,5 @@ supadart.exe
 .env
 
 lib/models/
+
+config.yaml

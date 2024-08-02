@@ -1,3 +1,5 @@
+import 'package:yaml/yaml.dart';
+
 import 'class.dart';
 import 'client_extension.dart';
 import 'dart_class.dart';
@@ -21,11 +23,12 @@ class BluePrint {
   });
 }
 
-BluePrint generateBluePrint(DatabaseSwagger swagger, bool isFlutter) {
-  final dartClasses = generateDartClasses(swagger);
+BluePrint generateBluePrint(
+    DatabaseSwagger swagger, bool isFlutter, YamlMap? mappings) {
+  final dartClasses = generateDartClasses(swagger, mappings);
   final imports = getImports(dartClasses, isFlutter);
   final clientExtension = generateClientExtension(swagger);
-  final models = generateModels(swagger);
+  final models = generateModels(swagger, mappings);
 
   return BluePrint(
     imports: imports,
@@ -46,8 +49,8 @@ class GeneratedFile {
 }
 
 List<GeneratedFile> generateClassesSingleFile(
-    DatabaseSwagger swagger, bool isFlutter) {
-  final blueprint = generateBluePrint(swagger, isFlutter);
+    DatabaseSwagger swagger, bool isFlutter, YamlMap? mappings) {
+  final blueprint = generateBluePrint(swagger, isFlutter, mappings);
   final clientExtension = blueprint.clientExtension;
   final dartClasses = blueprint.dartClasses;
   final imports = blueprint.imports;
@@ -63,8 +66,8 @@ List<GeneratedFile> generateClassesSingleFile(
 }
 
 List<GeneratedFile> generateDartModelFilesSeparated(
-    DatabaseSwagger swagger, bool isFlutter) {
-  final blueprint = generateBluePrint(swagger, isFlutter);
+    DatabaseSwagger swagger, bool isFlutter, YamlMap? mappings) {
+  final blueprint = generateBluePrint(swagger, isFlutter, mappings);
   final dartClasses = blueprint.dartClasses;
   final clientExtension = blueprint.clientExtension;
   final models = blueprint.models;
@@ -109,11 +112,9 @@ List<GeneratedFile> generateDartModelFilesSeparated(
   return output;
 }
 
-List<GeneratedFile> generateModelFiles(
-    DatabaseSwagger swagger, bool isFlutter, bool isSeperated) {
-  if (isSeperated) {
-    return generateDartModelFilesSeparated(swagger, isFlutter);
-  } else {
-    return generateClassesSingleFile(swagger, isFlutter);
-  }
+List<GeneratedFile> generateModelFiles(DatabaseSwagger swagger, bool isFlutter,
+    bool isSeperated, YamlMap? mappings) {
+  return isSeperated
+      ? generateDartModelFilesSeparated(swagger, isFlutter, mappings)
+      : generateClassesSingleFile(swagger, isFlutter, mappings);
 }
