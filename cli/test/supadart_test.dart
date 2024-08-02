@@ -20,7 +20,7 @@ void main() async {
   String anonKey;
   YamlMap? mappings;
   bool isFlutter;
-  bool isSeperated;
+  bool isSeparated;
   String output;
 
   final configPath = 'pubspec.yaml';
@@ -32,14 +32,14 @@ void main() async {
   if (config['supadart'] != null) {
     url = config['supadart']['supabase_url'];
     anonKey = config['supadart']['supabase_anon_key'];
-    isSeperated = config['supadart']['seperated'] ?? true;
+    isSeparated = config['supadart']['separated'] ?? true;
     isFlutter = config['supadart']['flutter'] ?? true;
     output = config['supadart']['output'] ?? './lib/models/';
     mappings = config['supadart']['mappings'];
 
     print('Supabase URL: $url');
     print('Supabase ANON KEY: $anonKey');
-    print('Seperated: $isSeperated');
+    print('Separated: $isSeparated');
     print('Flutter: $isFlutter');
     print('Output: $output');
     print('Mappings: $mappings');

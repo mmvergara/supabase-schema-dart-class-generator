@@ -36,7 +36,7 @@ void main(List<String> arguments) async {
   String anonKey;
   YamlMap? mappings;
   bool isFlutter;
-  bool isSeperated;
+  bool isSeparated;
   String output;
 
   final configPath = results['config'] ?? 'pubspec.yaml';
@@ -48,14 +48,14 @@ void main(List<String> arguments) async {
   if (config['supadart'] != null) {
     url = config['supadart']['supabase_url'];
     anonKey = config['supadart']['supabase_anon_key'];
-    isSeperated = config['supadart']['seperated'] ?? true;
+    isSeparated = config['supadart']['separated'] ?? true;
     isFlutter = config['supadart']['flutter'] ?? true;
     output = config['supadart']['output'] ?? './lib/models/';
     mappings = config['supadart']['mappings'];
 
     print('Supabase URL: $url');
     print('Supabase ANON KEY: $anonKey');
-    print('Seperated: $isSeperated');
+    print('Separated: $isSeparated');
     print('Flutter: $isFlutter');
     print('Output: $output');
     print('Mappings: $mappings');
@@ -73,7 +73,7 @@ void main(List<String> arguments) async {
   }
 
   final files =
-      generateModelFiles(databaseSwagger, isFlutter, isSeperated, mappings);
+      generateModelFiles(databaseSwagger, isFlutter, isSeparated, mappings);
   await generateAndFormatFiles(files, output);
 
   print('\n$green 🎉 Done! $reset');

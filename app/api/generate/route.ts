@@ -1,5 +1,5 @@
 import {
-  generateDartModelFilesSeperated,
+  generateDartModelFilesSeparated,
   generateClassesSingleFile,
 } from "@/generators";
 import { Definitions } from "@/generators/types";
@@ -11,7 +11,7 @@ export const GET = async (req: Request): Promise<NextResponse> => {
   const supabaseUrl = searchParams.get("SUPABASE_URL");
   const supabaseAnonKey = searchParams.get("SUPABASE_ANON_KEY");
   const isFlutter = !!!searchParams.get("dart");
-  const isSeperated = !!searchParams.get("seperated");
+  const isSeparated = !!searchParams.get("separated");
 
   if (!supabaseUrl || !supabaseAnonKey) {
     return NextResponse.json({
@@ -53,8 +53,8 @@ export const GET = async (req: Request): Promise<NextResponse> => {
     }
 
     let outputCode: string | Record<string, string> = "";
-    if (isSeperated) {
-      outputCode = generateDartModelFilesSeperated(definitions, isFlutter);
+    if (isSeparated) {
+      outputCode = generateDartModelFilesSeparated(definitions, isFlutter);
     } else {
       outputCode = generateClassesSingleFile(definitions, isFlutter);
     }

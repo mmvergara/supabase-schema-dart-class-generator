@@ -32,7 +32,7 @@
 
 ## 1.3.0
 
-- Added support for seperated class files generation
+- Added support for separated class files generation
 
 ## 1.2.1
 

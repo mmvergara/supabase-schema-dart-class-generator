@@ -30,7 +30,7 @@ supadart:
   # Optional, where to place the generated classes files
   output: lib/models/
   # Optional, if you want to generate seperate files for each classes
-  seperated: true
+  separated: true
   # Optional, if you are not using Flutter, just normal Dart project
   flutter: true
   # Optional, used to map table names to class names(case-sensitive)

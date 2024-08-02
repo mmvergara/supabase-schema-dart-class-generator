@@ -113,8 +113,8 @@ List<GeneratedFile> generateDartModelFilesSeparated(
 }
 
 List<GeneratedFile> generateModelFiles(DatabaseSwagger swagger, bool isFlutter,
-    bool isSeperated, YamlMap? mappings) {
-  return isSeperated
+    bool isSeparated, YamlMap? mappings) {
+  return isSeparated
       ? generateDartModelFilesSeparated(swagger, isFlutter, mappings)
       : generateClassesSingleFile(swagger, isFlutter, mappings);
 }

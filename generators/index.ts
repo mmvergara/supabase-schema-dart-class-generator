@@ -40,7 +40,7 @@ export const generateClassesSingleFile = (
   return code;
 };
 
-export const generateDartModelFilesSeperated = (
+export const generateDartModelFilesSeparated = (
   definitions: Definitions,
   isFlutter: boolean
 ): Record<string, string> => {
