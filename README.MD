@@ -111,7 +111,7 @@ dart pub global run supadart
 
 #### Configuration
 
-Add `supadart` field to your `supadart.yaml` file, example:
+Example of `supadart.yaml` file:
 
 ```yaml
 # Required, your supabase server url
@@ -150,8 +150,14 @@ supadart -c path/to/.yaml
 
 ```bash
 -h, --help         Show usage information
--c, --config       Path to the .yaml file -- (default: supadart.yaml)
--v, --version
+-i, --init         Initialize config file supadart.yaml
+-c, --config       Path to config file of yaml         --(default: supadart.yaml)
+-u, --url          Supabase URL                        --(default: supadart.yaml supabase_url)
+-k, --key          Supabase ANON KEY                   --(default: supadart.yaml supabase_anon_key)
+-o, --output       Output file path, add ./ prefix     --(default: ./lib/generated_classes.dart or ./lib/models/ if --separated is enabled
+-d, --dart         Generation for pure Dart project    --(default: false)
+-s, --separated    Separated files for each classes    --(default: false)
+-v, --version      v1.3.8
 ```
 
 ---

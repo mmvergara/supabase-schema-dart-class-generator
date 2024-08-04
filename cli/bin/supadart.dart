@@ -39,11 +39,11 @@ void main(List<String> arguments) async {
     ..addFlag('dart',
         abbr: 'd',
         negatable: false,
-        help: 'Enable if you are not using Flutter, just normal Dart project')
+        help: 'Generation for pure Dart project    --(default: false)')
     ..addFlag('separated',
         abbr: 's',
         negatable: false,
-        help: 'Generate Separated files for each classes')
+        help: 'Separated files for each classes    --(default: false)')
     ..addFlag('version', abbr: 'v', negatable: false, help: version);
 
   final results = parser.parse(arguments);
