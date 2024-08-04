@@ -19,36 +19,31 @@ void main() async {
   String url;
   String anonKey;
   YamlMap? mappings;
-  bool isFlutter;
+  bool isDart;
   bool isSeparated;
   String output;
 
-  final configPath = 'pubspec.yaml';
+  final configPath = 'supadart.yaml';
   print('Using config file: $configPath');
   final configFile = File(configPath);
   final configContent = await configFile.readAsString();
   final config = loadYaml(configContent);
 
-  if (config['supadart'] != null) {
-    url = config['supadart']['supabase_url'];
-    anonKey = config['supadart']['supabase_anon_key'];
-    isSeparated = config['supadart']['separated'] ?? true;
-    isFlutter = config['supadart']['flutter'] ?? true;
-    output = config['supadart']['output'] ?? './lib/models/';
-    mappings = config['supadart']['mappings'];
+  url = config['supabase_url'];
+  anonKey = config['supabase_anon_key'];
+  isSeparated = config['separated'] ?? false;
+  isDart = config['dart'] ?? false;
+  output = config['output'] ??
+      (isSeparated ? './lib/models/' : './lib/generated_classes.dart');
+  mappings = config['mappings'];
 
-    print('Supabase URL: $url');
-    print('Supabase ANON KEY: $anonKey');
-    print('Separated: $isSeparated');
-    print('Flutter: $isFlutter');
-    print('Output: $output');
-    print('Mappings: $mappings');
-    print('=' * 50);
-  } else {
-    print(
-        'Please add "supadart" config in pubspec.yaml or provide config file using --config');
-    exit(1);
-  }
+  print('URL: $url');
+  print('ANON KEY: $anonKey');
+  print('Separated: $isSeparated');
+  print('Dart: $isDart');
+  print('Output: $output');
+  print('Mappings: $mappings');
+  print('=' * 50);
 
   final databaseSwagger = await fetchDatabaseSwagger(url, anonKey);
   if (databaseSwagger == null) {

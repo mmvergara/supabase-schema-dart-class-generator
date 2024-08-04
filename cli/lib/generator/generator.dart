@@ -24,9 +24,9 @@ class BluePrint {
 }
 
 BluePrint generateBluePrint(
-    DatabaseSwagger swagger, bool isFlutter, YamlMap? mappings) {
+    DatabaseSwagger swagger, bool isDart, YamlMap? mappings) {
   final dartClasses = generateDartClasses(swagger, mappings);
-  final imports = getImports(dartClasses, isFlutter);
+  final imports = getImports(dartClasses, isDart);
   final clientExtension = generateClientExtension(swagger);
   final models = generateModels(swagger, mappings);
 
@@ -49,8 +49,8 @@ class GeneratedFile {
 }
 
 List<GeneratedFile> generateClassesSingleFile(
-    DatabaseSwagger swagger, bool isFlutter, YamlMap? mappings) {
-  final blueprint = generateBluePrint(swagger, isFlutter, mappings);
+    DatabaseSwagger swagger, bool isDart, YamlMap? mappings) {
+  final blueprint = generateBluePrint(swagger, isDart, mappings);
   final clientExtension = blueprint.clientExtension;
   final dartClasses = blueprint.dartClasses;
   final imports = blueprint.imports;
@@ -66,8 +66,8 @@ List<GeneratedFile> generateClassesSingleFile(
 }
 
 List<GeneratedFile> generateDartModelFilesSeparated(
-    DatabaseSwagger swagger, bool isFlutter, YamlMap? mappings) {
-  final blueprint = generateBluePrint(swagger, isFlutter, mappings);
+    DatabaseSwagger swagger, bool isDart, YamlMap? mappings) {
+  final blueprint = generateBluePrint(swagger, isDart, mappings);
   final dartClasses = blueprint.dartClasses;
   final clientExtension = blueprint.clientExtension;
   final models = blueprint.models;
@@ -76,7 +76,7 @@ List<GeneratedFile> generateDartModelFilesSeparated(
 
   for (var i = 0; i < dartClasses.length; i++) {
     String code = "";
-    final imports = getImports([dartClasses[i]], isFlutter);
+    final imports = getImports([dartClasses[i]], isDart);
     imports.replaceRange(1, 2, ["import 'supadart_abstract_class.dart';"]);
 
     code += imports.join("\n");
@@ -90,9 +90,9 @@ List<GeneratedFile> generateDartModelFilesSeparated(
     ));
   }
 
-  final supabaseSdkImport = isFlutter
-      ? "import 'package:supabase_flutter/supabase_flutter.dart';"
-      : "import 'package:supabase/supabase.dart';";
+  final supabaseSdkImport = isDart
+      ? "import 'package:supabase/supabase.dart';"
+      : "import 'package:supabase_flutter/supabase_flutter.dart';";
 
   output.add(GeneratedFile(
     fileName: "client_extension.dart",
@@ -112,9 +112,9 @@ List<GeneratedFile> generateDartModelFilesSeparated(
   return output;
 }
 
-List<GeneratedFile> generateModelFiles(DatabaseSwagger swagger, bool isFlutter,
-    bool isSeparated, YamlMap? mappings) {
+List<GeneratedFile> generateModelFiles(
+    DatabaseSwagger swagger, bool isDart, bool isSeparated, YamlMap? mappings) {
   return isSeparated
-      ? generateDartModelFilesSeparated(swagger, isFlutter, mappings)
-      : generateClassesSingleFile(swagger, isFlutter, mappings);
+      ? generateDartModelFilesSeparated(swagger, isDart, mappings)
+      : generateClassesSingleFile(swagger, isDart, mappings);
 }

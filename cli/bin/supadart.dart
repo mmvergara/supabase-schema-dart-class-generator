@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:args/args.dart';
+import 'package:supadart/config_init.dart';
 import 'package:yaml/yaml.dart';
 import 'package:supadart/generator/generator.dart';
 import 'package:supadart/generator/swagger.dart';
@@ -9,14 +10,40 @@ const String red = '\x1B[31m'; // Red text
 const String green = '\x1B[32m'; // Green text
 const String blue = '\x1B[34m'; // Blue text
 const String reset = '\x1B[0m'; // Reset to default color
+
 void main(List<String> arguments) async {
+  final defaultConfigFile = 'supadart.yaml';
   final parser = ArgParser()
     ..addFlag('help',
         abbr: 'h', negatable: false, help: 'Show usage information')
+    ..addFlag('init',
+        abbr: 'i',
+        negatable: false,
+        help: 'Initialize config file supadart.yaml ')
     ..addOption('config',
         abbr: 'c',
         help:
-            'Path to config file of yaml            -- (default: "pubspec.yaml")')
+            'Path to config file of yaml         --(default: $defaultConfigFile)')
+    ..addOption('url',
+        abbr: "u",
+        help:
+            'Supabase URL                        --(default: $defaultConfigFile supabase_url)')
+    ..addOption('key',
+        abbr: "k",
+        help:
+            'Supabase ANON KEY                   --(default: $defaultConfigFile supabase_anon_key)')
+    ..addOption('output',
+        abbr: 'o',
+        help:
+            'Output file path, add ./ prefix     --(default: ./lib/generated_classes.dart or ./lib/models/ if --separated is enabled')
+    ..addFlag('dart',
+        abbr: 'd',
+        negatable: false,
+        help: 'Enable if you are not using Flutter, just normal Dart project')
+    ..addFlag('separated',
+        abbr: 's',
+        negatable: false,
+        help: 'Generate Separated files for each classes')
     ..addFlag('version', abbr: 'v', negatable: false, help: version);
 
   final results = parser.parse(arguments);
@@ -32,39 +59,44 @@ void main(List<String> arguments) async {
     exit(0);
   }
 
+  if (results['init']) {
+    await configFileInit(defaultConfigFile);
+    exit(0);
+  }
+
   String url;
   String anonKey;
-  YamlMap? mappings;
-  bool isFlutter;
+  bool isDart;
   bool isSeparated;
   String output;
+  YamlMap? mappings;
 
-  final configPath = results['config'] ?? 'pubspec.yaml';
-  print('Using config file: $configPath');
+  final configPath = results['config'] ?? defaultConfigFile;
   final configFile = File(configPath);
   final configContent = await configFile.readAsString();
   final config = loadYaml(configContent);
 
-  if (config['supadart'] != null) {
-    url = config['supadart']['supabase_url'];
-    anonKey = config['supadart']['supabase_anon_key'];
-    isSeparated = config['supadart']['separated'] ?? true;
-    isFlutter = config['supadart']['flutter'] ?? true;
-    output = config['supadart']['output'] ?? './lib/models/';
-    mappings = config['supadart']['mappings'];
-
-    print('Supabase URL: $url');
-    print('Supabase ANON KEY: $anonKey');
-    print('Separated: $isSeparated');
-    print('Flutter: $isFlutter');
-    print('Output: $output');
-    print('Mappings: $mappings');
-    print('=' * 50);
-  } else {
-    print(
-        'Please add "supadart" config in pubspec.yaml or provide config file using --config');
+  url = results['url'] ?? config['supabase_url'] ?? '';
+  anonKey = results['key'] ?? config['supabase_anon_key'] ?? '';
+  if (url.isEmpty || anonKey.isEmpty) {
+    print('Please provide supabase_url and supabase_anon_key');
     exit(1);
   }
+
+  isSeparated = results['separated'] ? true : config['separated'] ?? false;
+  isDart = results['dart'] ? true : config['dart'] ?? false;
+  output = results['output'] ??
+      config['output'] ??
+      (isSeparated ? './lib/models/' : './lib/generated_classes.dart');
+  mappings = config['mappings'];
+
+  print('URL: $url');
+  print('ANON KEY: $anonKey');
+  print('Output: $output');
+  print('Separated: $isSeparated');
+  print('Dart: $isDart');
+  print('Mappings: $mappings');
+  print('=' * 50);
 
   final databaseSwagger = await fetchDatabaseSwagger(url, anonKey);
   if (databaseSwagger == null) {
@@ -73,7 +105,7 @@ void main(List<String> arguments) async {
   }
 
   final files =
-      generateModelFiles(databaseSwagger, isFlutter, isSeparated, mappings);
+      generateModelFiles(databaseSwagger, isDart, isSeparated, mappings);
   await generateAndFormatFiles(files, output);
 
   print('\n$green 🎉 Done! $reset');

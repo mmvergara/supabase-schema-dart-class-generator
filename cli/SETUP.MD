@@ -11,10 +11,10 @@ supadart:
 
   # Optional, where to place the generated classes files
   output: lib/models/
-  # Optional, if you want to generate seperate files for each classes
+  # Optional, if you want to generate separated files for each classes
   separated: true
   # Optional, if you are not using Flutter, just normal Dart project
-  flutter: true
+  dart: true
   # Optional, used to map table names to class names(case-sensitive)
   mappings:
     books: book
