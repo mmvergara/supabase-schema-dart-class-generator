@@ -49,12 +49,21 @@ supadart
 # If you have a .yaml file in a different location
 supadart -c path/to/.yaml
 
+# If you dont have a .env file specify the Supabase URL and ANON KEY
+supadart -u <your-supabase-url> -k <your-supabase-anon-key>
+
 ```
 
 ## Options
 
 ```bash
 -h, --help         Show usage information
--c, --config       Path to the .yaml file -- (default: supadart.yaml)
--v, --version
+-i, --init         Initialize config file supadart.yaml
+-c, --config       Path to config file of yaml         --(default: supadart.yaml)
+-u, --url          Supabase URL                        --(default: supadart.yaml supabase_url)
+-k, --key          Supabase ANON KEY                   --(default: supadart.yaml supabase_anon_key)
+-o, --output       Output file path, add ./ prefix     --(default: ./lib/generated_classes.dart or ./lib/models/ if --separated is enabled
+-d, --dart         Generation for pure Dart project    --(default: false)
+-s, --separated    Separated files for each classes    --(default: false)
+-v, --version      v1.3.8
 ```

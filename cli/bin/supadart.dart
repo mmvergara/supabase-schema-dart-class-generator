@@ -79,7 +79,9 @@ void main(List<String> arguments) async {
   url = results['url'] ?? config['supabase_url'] ?? '';
   anonKey = results['key'] ?? config['supabase_anon_key'] ?? '';
   if (url.isEmpty || anonKey.isEmpty) {
-    print('Please provide supabase_url and supabase_anon_key');
+    print(
+        "Please provide --url and --key or Set supabase_url and supabase_anon_key in .yaml file");
+    print('use -h or --help for help');
     exit(1);
   }
 

@@ -142,6 +142,9 @@ supadart
 # If you have a .yaml file in a different location
 supadart -c path/to/.yaml
 
+# If you dont have a .yaml file specify the Supabase URL and ANON KEY
+supadart -u <your-supabase-url> -k <your-supabase-anon-key>
+
 ```
 
 > Note: If you are not using Flutter, just normal Dart project, add `-d` option
