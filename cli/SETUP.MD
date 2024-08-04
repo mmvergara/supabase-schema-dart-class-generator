@@ -1,6 +1,6 @@
 # Setup
 
-#### Fill Up the pubspec.yaml file with the following content
+#### Fill Up the supadart.yaml file with the following content
 
 ```yaml
 supadart:

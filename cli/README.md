@@ -18,7 +18,7 @@ dart pub global run supadart
 
 ## Configuration
 
-Add `supadart` field to your `pubspec.yaml` file, example:
+Add `supadart` field to your `supadart.yaml` file, example:
 
 ```yaml
 supadart:
@@ -44,7 +44,7 @@ supadart:
 ## Generate Classes
 
 ```bash
-# Set the supabase_url and supabase_anon_key in your pubspec.yaml file
+# Set the supabase_url and supabase_anon_key in your supadart.yaml file
 supadart
 
 # If you have a .yaml file in a different location
@@ -56,6 +56,6 @@ supadart -c path/to/.yaml
 
 ```bash
 -h, --help         Show usage information
--c, --config       Path to the .yaml file -- (default: pubspec.yaml)
+-c, --config       Path to the .yaml file -- (default: supadart.yaml)
 -v, --version
 ```
